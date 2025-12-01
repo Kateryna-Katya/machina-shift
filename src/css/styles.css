@@ -1,1 +1,94 @@
-1
+:root {
+    /* Palette: Neon Industrial */
+    --color-bg: #0a0a0a;
+    /* Pure Dark */
+    --color-surface: #141414;
+    /* Dark Grey Surface */
+    --color-primary: #ccff00;
+    /* Electric Lime - Innovation & Energy */
+    --color-primary-dark: #a3cc00;
+    /* Darker Lime for hover */
+    --color-text: #ededed;
+    /* Off-white */
+    --color-text-inv: #0a0a0a;
+    /* Text on lime buttons */
+    --color-text-muted: #888888;
+    --color-border: #333333;
+
+    /* Layout */
+    --container-width: 1240px;
+    --header-height: 80px;
+
+    /* Fonts */
+    --font-main: 'Inter', sans-serif;
+    --font-heading: 'Space Grotesk', sans-serif;
+}
+
+/* Reset & Base Updates */
+body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+}
+
+/* Updated UI Elements for new palette */
+.btn--primary {
+    background: var(--color-primary);
+    color: var(--color-text-inv);
+    /* Black text on lime */
+    border: 2px solid var(--color-primary);
+    font-weight: 700;
+}
+
+.btn--primary:hover {
+    background: transparent;
+    color: var(--color-primary);
+    box-shadow: 0 0 20px rgba(204, 255, 0, 0.3);
+    /* Lime glow */
+}
+
+/* Top Bar Updates */
+.top-bar {
+    background-color: #000000;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.top-bar__link:hover,
+.top-bar__socials a:hover {
+    color: var(--color-primary);
+}
+
+/* Header Updates */
+.header {
+    background: rgba(10, 10, 10, 0.85);
+    /* Darker blur */
+    border-bottom: 1px solid var(--color-border);
+}
+
+.text-accent {
+    color: var(--color-primary);
+}
+
+.header__link::after {
+    background-color: var(--color-primary);
+}
+
+/* Footer Updates */
+.footer {
+    background-color: #050505;
+    /* Even darker footer */
+    border-top: 1px solid var(--color-border);
+}
+
+.footer__socials a {
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+.footer__socials a:hover {
+    background: var(--color-primary);
+    color: var(--color-text-inv);
+}
+
+.footer__note {
+    color: var(--color-primary);
+}
