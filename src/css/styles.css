@@ -426,3 +426,59 @@ img { max-width: 100%; display: block; }
   top: 100%; /* Пролетает вниз */
   transition: 0.8s ease-in-out;
 }
+.pages {
+  padding: 120px 0;
+  background: var(--color-bg);
+  min-height: 100vh;
+}
+.pages h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--color-primary);
+  margin-bottom: 40px;
+  text-transform: uppercase;
+}
+.pages h2 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: white;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  border-left: 3px solid var(--color-primary);
+  padding-left: 15px;
+}
+.pages p {
+  color: var(--color-text-muted);
+  margin-bottom: 15px;
+  line-height: 1.7;
+}
+.pages ul {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 20px;
+}
+.pages ul li {
+  position: relative;
+  padding-left: 25px;
+  margin-bottom: 15px;
+  color: var(--color-text);
+  line-height: 1.6;
+}
+.pages ul li::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  color: var(--color-primary);
+  font-weight: bold;
+}
+.pages strong {
+  color: white;
+}
+.pages a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+.pages a:hover {
+  text-decoration: none;
+  color: white;
+}
