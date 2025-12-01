@@ -832,3 +832,124 @@ a svg {
         justify-content: space-between;
     }
 }
+/* ABOUT SECTION UPDATE */
+.about-section {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--color-bg);
+}
+
+.row-about {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+@media (min-width: 992px) {
+    .row-about {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .about-content {
+        flex: 0 0 50%;
+    }
+
+    .stats-grid {
+        flex: 0 0 40%;
+    }
+}
+
+.about-actions {
+    margin-top: 40px;
+}
+
+/* STATS GRID */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    border-top: 1px solid var(--color-border);
+    border-left: 1px solid var(--color-border);
+    padding-top: 30px;
+    padding-left: 30px;
+    position: relative;
+}
+
+/* Декоративный уголок для сетки */
+.stats-grid::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 20px;
+    height: 20px;
+    border-top: 2px solid var(--color-primary);
+    border-left: 2px solid var(--color-primary);
+}
+
+.stat-item {
+    margin-bottom: 20px;
+}
+
+.stat-number {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1;
+}
+
+.stat-symbol {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.stat-label {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* INFINITE MARQUEE (Бегущая строка) */
+.marquee-wrapper {
+    width: 100%;
+    overflow: hidden;
+    padding: 60px 0 20px;
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    position: relative;
+}
+
+.marquee-content {
+    display: flex;
+    white-space: nowrap;
+    animation: marquee 20s linear infinite;
+}
+
+.marquee-content span {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    /* Крупный размер */
+    font-weight: 700;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+    /* Контурный текст */
+    padding-right: 50px;
+    text-transform: uppercase;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}

@@ -1,36 +1,38 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM Loaded. Initializing Machina Shift...');
 
-    // 1. Инициализация иконок (Lucide)
+    // 1. Иконки
     initIcons();
 
-    // 2. Плавный скролл (Lenis)
+    // 2. Плавный скролл
     initSmoothScroll();
 
     // 3. Мобильное меню
     initMobileMenu();
 
-    // 4. Анимация Hero (Three.js Fluid Distortion)
+    // 4. Анимация Hero (Жидкость)
     initHeroAnimation();
 
-    // 5. Аккордеон (Секция Обучения)
+    // 5. Статистика (Цифры) — НОВОЕ
+    initStats();
+
+    // 6. Аккордеон
     initAccordion();
 
-    // 6. Форма контактов
+    // 7. Форма
     initForm();
 
-    // 7. Cookie Popup
+    // 8. Cookies
     initCookies();
 });
 
 /* =========================================
-   1. ICONS
+   1. ICONS (LUCIDE)
    ========================================= */
 function initIcons() {
     try {
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
-            console.log('Icons initialized');
         } else {
             console.warn('Lucide library not found');
         }
@@ -40,7 +42,7 @@ function initIcons() {
 }
 
 /* =========================================
-   2. SMOOTH SCROLL (Lenis)
+   2. SMOOTH SCROLL (LENIS)
    ========================================= */
 function initSmoothScroll() {
     try {
@@ -58,7 +60,6 @@ function initSmoothScroll() {
             requestAnimationFrame(raf);
         }
         requestAnimationFrame(raf);
-        console.log('Smooth Scroll initialized');
     } catch (e) {
         console.error('Lenis Error:', e);
     }
@@ -74,14 +75,10 @@ function initMobileMenu() {
         const mobileMenu = document.querySelector('.mobile-menu');
         const mobileLinks = document.querySelectorAll('.mobile-menu__link, .mobile-menu__btn');
 
-        if (!burger || !mobileMenu) {
-            console.warn('Mobile menu elements missing');
-            return;
-        }
+        if (!burger || !mobileMenu) return;
 
         const toggleMenu = () => {
             mobileMenu.classList.toggle('is-open');
-            // Блокируем скролл страницы, когда меню открыто
             document.body.style.overflow = mobileMenu.classList.contains('is-open') ? 'hidden' : '';
         };
 
@@ -94,12 +91,9 @@ function initMobileMenu() {
             closeBtn.addEventListener('click', toggleMenu);
         }
 
-        // Закрываем меню при клике на ссылку
         mobileLinks.forEach(link => {
             link.addEventListener('click', toggleMenu);
         });
-        
-        console.log('Mobile Menu initialized');
 
     } catch (e) {
         console.error('Mobile Menu Error:', e);
@@ -107,7 +101,7 @@ function initMobileMenu() {
 }
 
 /* =========================================
-   4. HERO ANIMATION (Three.js)
+   4. HERO ANIMATION (THREE.JS)
    ========================================= */
 function initHeroAnimation() {
     const container = document.getElementById('canvas-container');
@@ -127,17 +121,16 @@ function initHeroAnimation() {
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
 
-        // Загрузка текстуры
         const loader = new THREE.TextureLoader();
         loader.setCrossOrigin('anonymous');
         
-        // Абстрактное темное изображение для фона
+        // Темное абстрактное изображение
         const imgUrl = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop';
         
         const texture = loader.load(imgUrl, 
-            () => {}, // Success
-            undefined, // Progress
-            () => { console.warn('Texture load failed, using fallback color'); } // Error
+            () => {}, 
+            undefined, 
+            () => console.warn('Texture failed to load')
         );
 
         const mouse = new THREE.Vector2(0, 0);
@@ -150,7 +143,6 @@ function initHeroAnimation() {
             uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
         };
 
-        // Shader Code
         const material = new THREE.ShaderMaterial({
             uniforms: uniforms,
             vertexShader: `
@@ -178,20 +170,14 @@ function initHeroAnimation() {
                     uvAspect.x *= aspect;
                     
                     float dist = distance(uvAspect, mousePoint);
-                    
-                    // Эффект жидкости (искажение)
                     float influence = smoothstep(0.45, 0.0, dist);
                     
                     uv.x += influence * (uv.x - uMouse.x) * 0.2; 
                     uv.y += influence * (uv.y - uMouse.y) * 0.2;
 
                     vec4 color = texture2D(uTexture, uv);
-                    
-                    // Затемнение фона для читаемости текста
-                    color.rgb *= 0.3; 
-                    
-                    // Неоновый зеленый тинт при наведении
-                    color.rgb += vec3(influence * 0.15, influence * 0.3, 0.0);
+                    color.rgb *= 0.3; // Darken
+                    color.rgb += vec3(influence * 0.15, influence * 0.3, 0.0); // Neon tint
 
                     gl_FragColor = color;
                 }
@@ -202,13 +188,11 @@ function initHeroAnimation() {
         const plane = new THREE.Mesh(geometry, material);
         scene.add(plane);
 
-        // Отслеживание мыши
         document.addEventListener('mousemove', (e) => {
             targetMouse.x = e.clientX / window.innerWidth;
             targetMouse.y = 1.0 - (e.clientY / window.innerHeight);
         });
 
-        // Ресайз окна
         window.addEventListener('resize', () => {
             const width = window.innerWidth;
             const height = window.innerHeight;
@@ -217,22 +201,16 @@ function initHeroAnimation() {
             uniforms.uResolution.value.y = height;
         });
 
-        // Анимационный цикл
         const clock = new THREE.Clock();
         function animate() {
             requestAnimationFrame(animate);
-            
             const elapsedTime = clock.getElapsedTime();
             uniforms.uTime.value = elapsedTime;
-
-            // Плавное движение (Lerp)
             mouse.x += (targetMouse.x - mouse.x) * 0.08;
             mouse.y += (targetMouse.y - mouse.y) * 0.08;
-
             renderer.render(scene, camera);
         }
         animate();
-        console.log('Hero Animation initialized');
 
     } catch (e) {
         console.error('Three.js Error:', e);
@@ -240,29 +218,65 @@ function initHeroAnimation() {
 }
 
 /* =========================================
-   5. ACCORDION (Education Section)
+   5. STATS ANIMATION (НОВОЕ)
+   ========================================= */
+function initStats() {
+    const statsSection = document.querySelector('.stats-grid');
+    const numbers = document.querySelectorAll('.stat-number');
+    let started = false;
+
+    if (!statsSection || numbers.length === 0) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !started) {
+                started = true;
+                
+                numbers.forEach(num => {
+                    const target = parseFloat(num.getAttribute('data-target'));
+                    const isFloat = target % 1 !== 0; 
+                    const duration = 2000; // 2 sec
+                    const stepTime = 20;
+                    const steps = duration / stepTime;
+                    const increment = target / steps;
+                    let current = 0;
+
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            current = target;
+                            clearInterval(timer);
+                        }
+                        num.innerText = isFloat ? current.toFixed(1) : Math.round(current);
+                    }, stepTime);
+                });
+            }
+        });
+    }, { threshold: 0.5 });
+
+    observer.observe(statsSection);
+}
+
+/* =========================================
+   6. ACCORDION
    ========================================= */
 function initAccordion() {
     const headers = document.querySelectorAll('.accordion-header');
     
-    if (headers.length === 0) return;
-
     headers.forEach(header => {
         header.addEventListener('click', () => {
             const item = header.parentElement;
             const body = item.querySelector('.accordion-body');
             const isOpen = header.classList.contains('active');
 
-            // Закрываем все остальные
+            // Close others
             document.querySelectorAll('.accordion-header').forEach(h => {
                 h.classList.remove('active');
                 h.setAttribute('aria-expanded', 'false');
-                if(h.nextElementSibling) {
-                    h.nextElementSibling.style.maxHeight = null;
-                }
+                if(h.nextElementSibling) h.nextElementSibling.style.maxHeight = null;
             });
 
-            // Если не был открыт — открываем текущий
+            // Open current
             if (!isOpen) {
                 header.classList.add('active');
                 header.setAttribute('aria-expanded', 'true');
@@ -270,11 +284,10 @@ function initAccordion() {
             }
         });
     });
-    console.log('Accordion initialized');
 }
 
 /* =========================================
-   6. CONTACT FORM
+   7. CONTACT FORM
    ========================================= */
 function initForm() {
     const form = document.getElementById('lead-form');
@@ -285,46 +298,37 @@ function initForm() {
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         
-        // 1. Проверка капчи (5 + 3)
+        // Captcha validation
         const captchaInput = document.getElementById('captcha');
-        const captchaVal = captchaInput ? captchaInput.value : '';
-        
-        if (parseInt(captchaVal) !== 8) {
-            msgBox.textContent = 'Ошибка: неверное решение примера (5 + 3 = 8).';
+        if (parseInt(captchaInput.value) !== 8) {
+            msgBox.textContent = 'Ошибка: неверное решение (5 + 3 = 8).';
             msgBox.className = 'form-message error';
             return;
         }
 
-        // 2. Имитация отправки
         const btn = form.querySelector('button[type="submit"]');
         const originalText = btn.textContent;
         
-        btn.textContent = 'Обработка...';
+        btn.textContent = 'Отправка...';
         btn.disabled = true;
-        btn.style.opacity = '0.7';
 
         setTimeout(() => {
-            // Успех
-            msgBox.textContent = 'Успешно! Мы свяжемся с вами в ближайшее время.';
+            msgBox.textContent = 'Успешно! Мы свяжемся с вами.';
             msgBox.className = 'form-message success';
             form.reset();
-            
             btn.textContent = originalText;
             btn.disabled = false;
-            btn.style.opacity = '1';
             
-            // Скрыть сообщение через 5 сек
             setTimeout(() => {
                 msgBox.textContent = '';
                 msgBox.className = 'form-message';
             }, 5000);
         }, 1500);
     });
-    console.log('Form initialized');
 }
 
 /* =========================================
-   7. COOKIE POPUP
+   8. COOKIE POPUP
    ========================================= */
 function initCookies() {
     const popup = document.getElementById('cookie-popup');
@@ -332,16 +336,14 @@ function initCookies() {
 
     if (!popup || !btn) return;
 
-    // Проверка LocalStorage
     if (!localStorage.getItem('cookiesAccepted')) {
         setTimeout(() => {
             popup.classList.add('show');
-        }, 2000); // Показать через 2 секунды
+        }, 2000);
     }
 
     btn.addEventListener('click', () => {
         localStorage.setItem('cookiesAccepted', 'true');
         popup.classList.remove('show');
     });
-    console.log('Cookies initialized');
 }
