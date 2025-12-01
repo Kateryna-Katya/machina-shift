@@ -491,3 +491,28 @@ img {
     color: var(--color-primary);
     margin-top: 5px;
 }
+/* Исправление для кликов по кнопкам */
+button svg,
+a svg {
+    pointer-events: none;
+    /* Клик проходит сквозь иконку на кнопку */
+}
+
+/* Исправление для мобильного меню */
+.mobile-menu {
+    /* Добавляем fallback цвет, если переменные не сработают */
+    background-color: #0a0a0a;
+    background-color: var(--color-bg);
+
+    /* Убеждаемся, что оно поверх всего */
+    z-index: 9999;
+}
+
+/* Исправление для бургера */
+.header__burger {
+    z-index: 102;
+    /* Выше чем хедер */
+    position: relative;
+    padding: 5px;
+    /* Увеличим область клика */
+}
